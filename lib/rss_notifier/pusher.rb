@@ -11,7 +11,7 @@ module RssNotifier
         message: "#{item[:message]} <p><em>#{item[:pubdate].localtime.strftime("%B %d %H:%M")}</em></p>",
         html: 1,
         priority: 0,
-        timestamp: item[:pubdate].to_i,
+        # timestamp: item[:pubdate].to_i,
       }
       res = Curl.post(API_URL, params.to_json) do |req|
         req.headers['content-type'] = 'application/json'
