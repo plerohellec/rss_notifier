@@ -5,8 +5,10 @@ require 'open-uri'
 require 'awesome_print'
 require 'curb'
 require 'json'
+require 'yaml'
 
 require_relative "rss_notifier/version"
+require_relative "rss_notifier/manager"
 require_relative "rss_notifier/parser"
 require_relative "rss_notifier/store"
 require_relative "rss_notifier/worker"
