@@ -17,11 +17,11 @@ module RssNotifier
         break if @pushed.size > max
         next if @store.exists?(item)
         next unless item[:pubdate] > Time.now - 7200
-        next if @skipped[item[:guid]]
+        next if @skipped.exists?(item)
 
         if @item_filter.skip?(item)
-          puts "Skipping #{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\" (whitelist)"
-          @skipped[item[:guid]] = item[:pubdate]
+          puts "Skipping #{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\""
+          @skipped.add(item)
           next
         end
 

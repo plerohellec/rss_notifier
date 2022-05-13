@@ -4,12 +4,12 @@ module RssNotifier
       @config_file = config_file
       @store = store
       @pusher = pusher
-      @skipped = {}
+      @skipped = Store.new
     end
 
     def run
       while (true) do
-        puts "working..."
+        puts "working... (#{Time.now.strftime("%B %d %H:%M")})"
         config = YAML.load(File.read(@config_file))
         pushed = []
         item_filter = ItemFilter.new(config['whitelist'])
@@ -19,13 +19,9 @@ module RssNotifier
           worker.run
         end
         puts
-        age_skipped
-        sleep 300
+        @skipped.age
+        sleep 600
       end
-    end
-
-    def age_skipped
-      @skipped.delete_if { |guid, date| date < Time.now - 86400 }
     end
   end
 end
