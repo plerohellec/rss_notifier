@@ -6,7 +6,9 @@ module RssNotifier
     end
 
     def keep?(item)
-      @regex.match(item[:title])
+      if res = @regex.match(item[:title])
+        return res[0]
+      end
     end
 
     def skip?(item)

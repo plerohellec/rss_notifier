@@ -11,4 +11,5 @@
 .rspec_status
 
 store.dump
+hit_counters.dump
 .env

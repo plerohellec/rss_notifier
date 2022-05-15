@@ -1,12 +1,13 @@
 module RssNotifier
   class Worker
-    def initialize(feed, store, pusher, item_filter, skipped, pushed)
+    def initialize(feed, store, pusher, item_filter, skipped, pushed, hit_counter)
       @feed = feed
       @store = store
       @pusher = pusher
       @item_filter = item_filter
       @skipped = skipped
       @pushed = pushed
+      @hit_counter = hit_counter
     end
 
     def run
@@ -18,14 +19,21 @@ module RssNotifier
         next unless item[:pubdate] > Time.now - 7200
         next if @skipped.exists?(item)
 
-        if @item_filter.skip?(item)
-          puts "Skipping #{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\""
+        label = "#{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\""
+
+        hit = @item_filter.keep?(item)
+        unless hit
+          puts "Skipping #{label}"
           @skipped.add(item)
+          next
+        end
+        if @hit_counter.too_many?(hit)
+          puts "Throttling keyword #{hit} - #{label}"
           next
         end
 
         @store.add(item)
-        puts "\033[1mPushing\033[0m #{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\""
+        puts "\033[1mPushing\033[0m #{label}"
         @pusher.push(item, @feed)
         @pushed << item
       end

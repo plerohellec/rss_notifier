@@ -14,6 +14,7 @@ require_relative "rss_notifier/store"
 require_relative "rss_notifier/worker"
 require_relative "rss_notifier/pusher"
 require_relative "rss_notifier/item_filter"
+require_relative "rss_notifier/hit_counter"
 
 module RssNotifier
   class Error < StandardError; end
