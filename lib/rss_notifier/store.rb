@@ -19,8 +19,8 @@ module RssNotifier
     end
 
     def age
-      @store[:guids].delete_if { |guid, date| date < Time.now - 3600*6 }
-      @store[:titles].delete_if { |title, date| date < Time.now - 3600*6 }
+      @store[:guids].delete_if { |guid, date| date < Time.now - 3600*24 }
+      @store[:titles].delete_if { |title, date| date < Time.now - 3600*24 }
     end
 
     def load

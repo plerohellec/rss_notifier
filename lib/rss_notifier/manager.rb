@@ -15,7 +15,7 @@ module RssNotifier
         item_filter = ItemFilter.new(config['whitelist'])
         config['feeds'].each do |feed|
           puts "\033[4mProcessing #{feed['name']}\033[0m"
-          worker = Worker.new(feed['name'], feed['url'], @store, @pusher, item_filter, @skipped, pushed)
+          worker = Worker.new(feed, @store, @pusher, item_filter, @skipped, pushed)
           worker.run
         end
         puts

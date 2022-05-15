@@ -16,8 +16,8 @@ module RssNotifier
           yield info
         end
       end
-    rescue OpenURI::HTTPError, SocketError => e
-      puts "Failed to open #{url} - #{e.to_s}"
+    rescue => e
+      puts "Failed to open #{url} - #{e.class}: #{e.to_s}"
     end
   end
 end
