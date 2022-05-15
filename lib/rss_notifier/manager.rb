@@ -13,7 +13,7 @@ module RssNotifier
         puts "working... (#{Time.now.strftime("%B %d %H:%M")})"
         config = YAML.load(File.read(@config_file))
         pushed = []
-        item_filter = ItemFilter.new(config['whitelist'])
+        item_filter = ItemFilter.new(config['keywords'])
         config['feeds'].each do |feed|
           puts "\033[4mProcessing #{feed['name']}\033[0m"
           worker = Worker.new(feed, @store, @pusher, item_filter, @skipped, pushed, @hit_counter)
@@ -21,7 +21,7 @@ module RssNotifier
         end
         puts
         @skipped.age
-        sleep 600
+        sleep config['poll_period_seconds']
       end
     end
   end

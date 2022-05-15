@@ -1,8 +1,7 @@
 module RssNotifier
   class HitCounter
-    DUMP_FILENAME = 'hit_counters.dump'
-
-    def initialize(max_hits, period_hours)
+    def initialize(dump_filename, max_hits, period_hours)
+      @dump_filename = dump_filename
       @max_hits = max_hits
       @period_hours = period_hours
       @buckets = {}
@@ -15,14 +14,14 @@ module RssNotifier
     end
 
     def dump
-      File.write(DUMP_FILENAME, Marshal.dump(@buckets))
-      puts "Dumped hit counters to #{DUMP_FILENAME} (#{@buckets.size} items)"
+      File.write(@dump_filename, Marshal.dump(@buckets))
+      puts "Dumped hit counters to #{@dump_filename} (#{@buckets.size} items)"
     end
 
     def load
-      return unless File.exists?(DUMP_FILENAME)
-      @buckets = Marshal.load(File.read(DUMP_FILENAME))
-      puts "Loaded hit counters from #{DUMP_FILENAME} (#{@buckets.size} items)"
+      return unless File.exists?(@dump_filename)
+      @buckets = Marshal.load(File.read(@dump_filename))
+      puts "Loaded hit counters from #{@dump_filename} (#{@buckets.size} items)"
     end
   end
 

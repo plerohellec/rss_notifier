@@ -2,6 +2,10 @@ module RssNotifier
   class Pusher
     API_URL = 'https://api.pushover.net/1/messages.json'
 
+    def initialize(testing)
+      @testing = testing
+    end
+
     def push(item, feed)
       params = {
         token: ENV['PUSHOVER_API_TOKEN'],
@@ -13,6 +17,8 @@ module RssNotifier
         priority: 0,
         # timestamp: item[:pubdate].to_i,
       }
+
+      return if @testing
       res = Curl.post(API_URL, params.to_json) do |req|
         req.headers['content-type'] = 'application/json'
       end

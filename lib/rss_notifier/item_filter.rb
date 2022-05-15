@@ -1,8 +1,8 @@
 module RssNotifier
   class ItemFilter
-    def initialize(whitelist)
-      whitelist_terms = whitelist.split(',').map(&:strip)
-      @regex = /(?:#{whitelist_terms.join('|')})/i
+    def initialize(keywords)
+      terms = keywords.split(',').map(&:strip)
+      @regex = /(?:#{terms.join('|')})/i
     end
 
     def keep?(item)

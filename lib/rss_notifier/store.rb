@@ -1,6 +1,7 @@
 module RssNotifier
   class Store
-    def initialize
+    def initialize(dump_filename=nil)
+      @dump_filename = dump_filename
       @store = { guids: {}, titles: {} }
     end
 
@@ -14,8 +15,13 @@ module RssNotifier
     end
 
     def dump
-      File.write('store.dump', Marshal.dump(@store))
-      puts "Dumped store to store.dump (#{@store[:guids].size} items)"
+      unless @dump_filename
+        puts "Not dumping since filename is nil"
+        return
+      end
+
+      File.write(@dump_filename, Marshal.dump(@store))
+      puts "Dumped store to #{@dump_filename} (#{@store[:guids].size} items)"
     end
 
     def age
@@ -24,14 +30,14 @@ module RssNotifier
     end
 
     def load
-      return unless File.exists?('store.dump')
-      @store = Marshal.load(File.read('store.dump'))
+      return unless File.exists?(@dump_filename)
+      @store = Marshal.load(File.read(@dump_filename))
       unless @store[:guids]
         @orig = @store.dup
         @store = { guids: {}, titles: {} }
         @store[:guids] = @orig
       end
-      puts "Loaded store from store.dump (#{@store[:guids].size} items)"
+      puts "Loaded store from #{@dump_filename} (#{@store[:guids].size} items)"
     end
   end
 end

@@ -10,6 +10,5 @@
 # rspec failure tracking
 .rspec_status
 
-store.dump
-hit_counters.dump
+*.dump
 .env
