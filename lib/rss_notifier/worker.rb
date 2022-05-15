@@ -21,14 +21,14 @@ module RssNotifier
 
         label = "#{item[:pubdate].localtime.strftime("%B %d %H:%M")} \"#{item[:title]}\""
 
-        hit = @item_filter.keep?(item)
+        hit, throttle = @item_filter.keep?(item)
         unless hit
           puts "Skipping #{label}"
           @skipped.add(item)
           next
         end
-        if @hit_counter.too_many?(hit)
-          puts "Throttling keyword #{hit} - #{label}"
+        if @hit_counter.too_many?(hit, throttle)
+          puts "Throttling keyword \"#{hit}\" (t=#{throttle}) - #{label}"
           next
         end
 

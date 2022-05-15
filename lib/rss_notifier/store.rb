@@ -16,7 +16,7 @@ module RssNotifier
 
     def dump
       unless @dump_filename
-        puts "Not dumping since filename is nil"
+        puts "Not dumping store since filename is nil"
         return
       end
 
