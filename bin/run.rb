@@ -6,11 +6,11 @@ require 'rss_notifier'
 config = YAML.load(File.read('config.yml'))
 
 testing = false
+puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
 pusher = RssNotifier::Pusher.new(testing)
 store = RssNotifier::Store.new(testing ? 'test_store.dump' : 'store.dump')
-hit_counter = RssNotifier::HitCounter.new(config['throttles'],
-                                          testing ? 'test_hit_counters.dump' : 'git_counters.dump')
+hit_counter = RssNotifier::HitCounter.new(testing ? 'test_hit_counters.dump' : 'hit_counters.dump')
 
 Signal.trap("INT") {
   store.age

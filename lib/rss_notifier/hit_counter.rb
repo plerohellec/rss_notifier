@@ -1,18 +1,16 @@
 module RssNotifier
   class HitCounter
-    def initialize(throttle_config, dump_filename = nil)
+    def initialize(dump_filename = nil)
       @dump_filename = dump_filename
-      @throttle_config = throttle_config
-
       @buckets = {}
     end
 
-    def too_many?(keyword, throttle_type)
-      raise "Unknow throttle_type #{throttle_type}" unless @throttle_config[throttle_type]
+    def too_many?(keyword, throttle_type, throttle_config)
+      raise "Unknow throttle_type #{throttle_type}" unless throttle_config[throttle_type]
       k = keyword.downcase
-      @buckets[k] ||= LeakyBucket.new(k, @throttle_config[throttle_type]['max_hits'],
-                                         @throttle_config[throttle_type]['period_hours'])
-      @buckets[k].too_many?
+      @buckets[k] ||= LeakyBucket.new(k)
+      @buckets[k].too_many?(throttle_config[throttle_type]['max_hits'],
+                            throttle_config[throttle_type]['period_hours'])
     end
 
     def dump
@@ -33,23 +31,22 @@ module RssNotifier
   end
 
   class LeakyBucket
-    def initialize(keyword, max_hits, period_hours)
+    def initialize(keyword)
       @keyword = keyword
-      @max_hits = max_hits
-      @period_hours = period_hours
       @bucket = []
     end
 
-    def too_many?
-      age
-      return true if @bucket.size >= @max_hits
+    def too_many?(max_hits, period_hours)
+      age(period_hours)
+
+      return true if @bucket.size >= max_hits
       @bucket << Time.now
-      puts "Added hit to \"#{@keyword}\" [#{@max_hits}/#{@period_hours}] bucket (size=#{@bucket.size})"
+      puts "Added hit to \"#{@keyword}\" [#{max_hits}/#{period_hours}] bucket (size=#{@bucket.size})"
       false
     end
 
-    def age
-      @bucket.delete_if { |t| t < Time.now - @period_hours * 3600 }
+    def age(period_hours)
+      @bucket.delete_if { |t| t < Time.now - period_hours * 3600 }
     end
   end
 end

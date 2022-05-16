@@ -16,7 +16,8 @@ module RssNotifier
         item_filter = ItemFilter.new(config['keywords'])
         config['feeds'].each do |feed|
           puts "\033[4mProcessing #{feed['name']}\033[0m"
-          worker = Worker.new(feed, @store, @pusher, item_filter, @skipped, pushed, @hit_counter)
+          worker = Worker.new(feed, @store, @pusher, item_filter, @skipped, pushed,
+                              @hit_counter, config['throttles'])
           worker.run
         end
         puts

@@ -1,6 +1,6 @@
 module RssNotifier
   class Worker
-    def initialize(feed, store, pusher, item_filter, skipped, pushed, hit_counter)
+    def initialize(feed, store, pusher, item_filter, skipped, pushed, hit_counter, throttle_config)
       @feed = feed
       @store = store
       @pusher = pusher
@@ -8,6 +8,7 @@ module RssNotifier
       @skipped = skipped
       @pushed = pushed
       @hit_counter = hit_counter
+      @throttle_config = throttle_config
     end
 
     def run
@@ -27,7 +28,7 @@ module RssNotifier
           @skipped.add(item)
           next
         end
-        if @hit_counter.too_many?(hit, throttle)
+        if @hit_counter.too_many?(hit, throttle, @throttle_config)
           puts "Throttling keyword \"#{hit}\" (t=#{throttle}) - #{label}"
           next
         end
