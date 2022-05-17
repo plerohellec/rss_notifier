@@ -1,5 +1,7 @@
 module RssNotifier
   class Parser
+    include Logging
+
     def run(feed_name, url, &block)
       URI.open(url) do |rss|
         feed = RSS::Parser.parse(rss)
@@ -17,7 +19,7 @@ module RssNotifier
         end
       end
     rescue => e
-      puts "Failed to open #{url} - #{e.class}: #{e.to_s}"
+      logger.error "Failed to open #{url} - #{e.class}: #{e.to_s}"
     end
   end
 end

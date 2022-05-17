@@ -1,5 +1,7 @@
 module RssNotifier
   class Manager
+    include Logging
+
     def initialize(config_file, store, pusher, hit_counter)
       @config_file = config_file
       @store = store
@@ -10,17 +12,17 @@ module RssNotifier
 
     def run
       while (true) do
-        puts "working... (#{Time.now.strftime("%B %d %H:%M")})"
+        logger.info "working... (#{Time.now.strftime("%B %d %H:%M")})"
         config = YAML.load(File.read(@config_file))
         pushed = []
         item_filter = ItemFilter.new(config['keywords'])
         config['feeds'].each do |feed|
-          puts "\033[4mProcessing #{feed['name']}\033[0m"
+          logger.info "\033[4mProcessing #{feed['name']}\033[0m"
           worker = Worker.new(feed, @store, @pusher, item_filter, @skipped, pushed,
                               @hit_counter, config['throttles'])
           worker.run
         end
-        puts
+        logger.info ""
         @skipped.age
         sleep config['poll_period_seconds']
       end

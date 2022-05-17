@@ -1,5 +1,7 @@
 module RssNotifier
   class HitCounter
+    include Logging
+
     def initialize(dump_filename = nil)
       @dump_filename = dump_filename
       @buckets = {}
@@ -15,22 +17,24 @@ module RssNotifier
 
     def dump
       unless @dump_filename
-        puts "Not dumping hit counters since filename is nil"
+        logger.warn "Not dumping hit counters since filename is nil"
         return
       end
 
       File.write(@dump_filename, Marshal.dump(@buckets))
-      puts "Dumped hit counters to #{@dump_filename} (#{@buckets.size} items)"
+      logger.info "Dumped hit counters to #{@dump_filename} (#{@buckets.size} items)"
     end
 
     def load
       return unless File.exists?(@dump_filename)
       @buckets = Marshal.load(File.read(@dump_filename))
-      puts "Loaded hit counters from #{@dump_filename} (#{@buckets.size} items)"
+      logger.info "Loaded hit counters from #{@dump_filename} (#{@buckets.size} items)"
     end
   end
 
   class LeakyBucket
+    include Logging
+
     def initialize(keyword)
       @keyword = keyword
       @bucket = []
@@ -41,9 +45,11 @@ module RssNotifier
 
       return true if @bucket.size >= max_hits
       @bucket << Time.now
-      puts "Added hit to \"#{@keyword}\" [#{max_hits}/#{period_hours}] bucket (size=#{@bucket.size})"
+      logger.debug "Added hit to \"#{@keyword}\" [#{max_hits}/#{period_hours}] bucket (size=#{@bucket.size})"
       false
     end
+
+    private
 
     def age(period_hours)
       @bucket.delete_if { |t| t < Time.now - period_hours * 3600 }

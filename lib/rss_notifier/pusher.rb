@@ -1,5 +1,7 @@
 module RssNotifier
   class Pusher
+    include Logging
+
     API_URL = 'https://api.pushover.net/1/messages.json'
 
     def initialize(testing)

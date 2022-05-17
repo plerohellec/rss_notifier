@@ -6,8 +6,10 @@ require 'awesome_print'
 require 'curb'
 require 'json'
 require 'yaml'
+require 'logger'
 
 require_relative "rss_notifier/version"
+require_relative "rss_notifier/logging"
 require_relative "rss_notifier/manager"
 require_relative "rss_notifier/parser"
 require_relative "rss_notifier/store"
