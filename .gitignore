@@ -7,6 +7,9 @@
 /spec/reports/
 /tmp/
 
+/cache/*.dump
+/log/*.log
+
 # rspec failure tracking
 .rspec_status
 
