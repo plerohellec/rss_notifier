@@ -31,7 +31,6 @@ GEM
       ast (~> 2.4.1)
     racc (1.6.0)
     rainbow (3.1.1)
-    rake (13.0.6)
     regexp_parser (2.4.0)
     reverse_markdown (2.1.1)
       nokogiri
@@ -78,7 +77,6 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
-  rake (~> 13.0)
   rss_notifier!
   solargraph
 
