@@ -23,7 +23,12 @@ cache_dir = config['cache_dir']
 testing = config['testing']
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
-logger = Logger.new("#{log_dir}/rssn.log")
+logger = if log_dir=='STDOUT'
+  Logger.new(STDOUT)
+else
+  Logger.new("#{log_dir}/rssn.log")
+end
+
 logger.level = :debug
 logger.formatter = proc do |severity, datetime, progname, msg|
   "#{datetime.strftime('%H:%M:%S')} #{severity[0]}: #{msg}\n"
@@ -34,12 +39,20 @@ pusher = RssNotifier::Pusher.new(testing)
 store = RssNotifier::Store.new(testing ? "#{cache_dir}/test_store.dump" : "#{cache_dir}/store.dump")
 hit_counter = RssNotifier::HitCounter.new(testing ? "#{cache_dir}/test_hit_counters.dump" : "#{cache_dir}/hit_counters.dump")
 
-Signal.trap("INT") {
+def terminate(signal, store, hit_counter)
   store.age
   store.dump
   hit_counter.dump
-  puts "All done."
+  puts "All done #{signal}."
   exit
+end
+
+Signal.trap("INT") {
+  terminate('INT', store, hit_counter)
+}
+
+Signal.trap("TERM") {
+  terminate('TERM', store, hit_counter)
 }
 
 store.load
