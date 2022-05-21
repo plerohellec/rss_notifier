@@ -1,1 +1,1 @@
-worker: bundle exec bin/run.rb -c config/test-config.yml
+worker: bundle exec bin/run.rb -c storage/config/test-config.yml
