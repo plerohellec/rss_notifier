@@ -18,12 +18,12 @@ module RssNotifier
 
     def dump
       unless @dump_filename
-        logger.warn "Not dumping store since filename is nil"
+        puts "Not dumping store since filename is nil"
         return
       end
 
       File.write(@dump_filename, Marshal.dump(@store))
-      logger.info "Dumped store to #{@dump_filename} (#{@store[:guids].size} items)"
+      puts "Dumped store to #{@dump_filename} (#{@store[:guids].size} items)"
     end
 
     def age

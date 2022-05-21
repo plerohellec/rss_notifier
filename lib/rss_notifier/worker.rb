@@ -32,6 +32,7 @@ module RssNotifier
         end
         if @hit_counter.too_many?(hit, throttle, @throttle_config)
           logger.debug "Throttling keyword \"#{hit}\" (t=#{throttle}) - #{label}"
+          @skipped.add(item)
           next
         end
 

@@ -17,12 +17,12 @@ module RssNotifier
 
     def dump
       unless @dump_filename
-        logger.warn "Not dumping hit counters since filename is nil"
+        puts "Not dumping hit counters since filename is nil"
         return
       end
 
       File.write(@dump_filename, Marshal.dump(@buckets))
-      logger.info "Dumped hit counters to #{@dump_filename} (#{@buckets.size} items)"
+      puts "Dumped hit counters to #{@dump_filename} (#{@buckets.size} items)"
     end
 
     def load

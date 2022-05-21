@@ -5,11 +5,10 @@ require 'rss_notifier'
 
 config = YAML.load(File.read('config.yml'))
 
-testing = true
+testing = (config['testing'] == true)
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
-
-logger = Logger.new(STDOUT)
+logger = Logger.new('rssn.log')
 logger.level = :debug
 logger.formatter = proc do |severity, datetime, progname, msg|
   "#{datetime.strftime('%H:%M:%S')} #{severity[0]}: #{msg}\n"
