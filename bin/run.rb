@@ -1,11 +1,18 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'dotenv/load'
 require 'rss_notifier'
 
-config = YAML.load(File.read('config.yml'))
+options = {}
+OptionParser.new do |parser|
+  parser.banner = "Usage: run.rb [options]"
+  parser.on("-c", "--config [PATH]", String,  "Path to config file") { |cfg|  options[:cfg] = cfg  }
+end.parse!
 
-testing = (config['testing'] == true)
+config = YAML.load(File.read(options[:cfg]))
+
+testing = config['testing']
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
 logger = Logger.new('rssn.log')
@@ -29,7 +36,6 @@ Signal.trap("INT") {
 
 store.load
 hit_counter.load
-
-manager = RssNotifier::Manager.new('config.yml', store, pusher, hit_counter)
+manager = RssNotifier::Manager.new(options[:cfg], store, pusher, hit_counter)
 manager.run
 
