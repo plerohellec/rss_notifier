@@ -23,10 +23,10 @@ cache_dir = config['cache_dir']
 testing = config['testing']
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
-logger = if log_dir=='STDOUT'
-  Logger.new(STDOUT)
+if log_dir == 'STDOUT'
+  logger = Logger.new(STDOUT)
 else
-  Logger.new("#{log_dir}/rssn.log")
+  logger = Logger.new("#{log_dir}/rssn.log")
 end
 
 logger.level = :debug
