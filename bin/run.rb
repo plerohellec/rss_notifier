@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'logger'
 require 'optparse'
 require 'dotenv/load'
 require 'rss_notifier'
@@ -34,6 +35,8 @@ logger.formatter = proc do |severity, datetime, progname, msg|
   "#{datetime.strftime('%H:%M:%S')} #{severity[0]}: #{msg}\n"
 end
 RssNotifier::Manager.init_logger(logger)
+
+logger.info "Logger is running"
 
 pusher = RssNotifier::Pusher.new(testing)
 store = RssNotifier::Store.new(testing ? "#{cache_dir}/test_store.dump" : "#{cache_dir}/store.dump")
