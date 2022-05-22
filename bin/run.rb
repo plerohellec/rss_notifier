@@ -22,6 +22,7 @@ log_dir = config['log_dir']
 cache_dir = config['cache_dir']
 testing = config['testing']
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
+File.open('storage/log/foo.log', 'a') { |f| f.write "Start rssn\n" }
 
 logger = if log_dir=='STDOUT'
   Logger.new(STDOUT)
@@ -43,6 +44,8 @@ def terminate(signal, store, hit_counter)
   store.age
   store.dump
   hit_counter.dump
+  File.open('storage/log/foo.log', 'a') { |f| f.write "Stop rssn\n" }
+
   puts "All done #{signal}."
   exit
 end
