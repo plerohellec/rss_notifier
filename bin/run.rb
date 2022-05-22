@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'logger'
 require 'optparse'
 require 'dotenv/load'
 require 'rss_notifier'
@@ -23,38 +24,16 @@ cache_dir = config['cache_dir']
 testing = config['testing']
 puts "#{testing ? "TESTING" : "PRODUCTION"} mode is ON"
 
-
-class Logger
-  def initialize(f)
-  end
-
-  def debug(s)
-    puts "rssn: #{s}"
-  end
-
-  def info(s)
-    debug(s)
-  end
-
-  def warn(s)
-    debug(s)
-  end
-
-  def error(s)
-    debug(s)
-  end
-end
-
 if log_dir == 'STDOUT'
   logger = Logger.new(STDOUT)
 else
   logger = Logger.new("#{log_dir}/rssn.log")
 end
 
-# logger.level = :debug
-# logger.formatter = proc do |severity, datetime, progname, msg|
-#   "#{datetime.strftime('%H:%M:%S')} #{severity[0]}: #{msg}\n"
-# end
+logger.level = :debug
+logger.formatter = proc do |severity, datetime, progname, msg|
+  "#{datetime.strftime('%H:%M:%S')} #{severity[0]}: #{msg}\n"
+end
 RssNotifier::Manager.init_logger(logger)
 
 logger.info "Logger is running"
