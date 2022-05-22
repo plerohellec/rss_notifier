@@ -13,8 +13,6 @@ module RssNotifier
     def run
       while (true) do
         logger.info "working... (#{Time.now.strftime("%B %d %H:%M")})"
-        File.open('storage/log/foo.log', 'a') { |f| f.write "working... (#{Time.now.strftime("%B %d %H:%M")})\n" }
-
         config = YAML.load(File.read(@config_file))
         pushed = []
         item_filter = ItemFilter.new(config['keywords'])
