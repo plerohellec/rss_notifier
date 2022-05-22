@@ -6,7 +6,7 @@ require 'awesome_print'
 require 'curb'
 require 'json'
 require 'yaml'
-require 'logger'
+# require 'logger'
 
 require_relative "rss_notifier/version"
 require_relative "rss_notifier/logging"
